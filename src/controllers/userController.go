@@ -4,69 +4,176 @@ import (
 	"devbook/src/database"
 	"devbook/src/models"
 	"devbook/src/persistence"
+	"devbook/src/responses"
 	"encoding/json"
-	"fmt"
+	"github.com/gorilla/mux"
 	"io/ioutil"
-	"log"
 	"net/http"
+	"strconv"
+	"strings"
 )
 
-// creates a user in database
+// CreateUser creates a user in database
 func CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	requestBody, error := ioutil.ReadAll(r.Body)
 
 	if error != nil {
-		log.Fatal(error)
+		responses.ErrorResponse(w, http.StatusUnprocessableEntity, error)
+		return
 	}
 
 	var user models.User
 	if error = json.Unmarshal(requestBody, &user); error != nil {
-		log.Fatal(error)
+		responses.ErrorResponse(w, http.StatusBadRequest, error)
+		return
+	}
+
+	if error = user.PrepareCreate(); error != nil {
+		responses.ErrorResponse(w, http.StatusBadRequest, error)
+		return
 	}
 
 	db, error := database.Connect()
 	if error != nil {
-		log.Fatal(error)
+		responses.ErrorResponse(w, http.StatusInternalServerError, error)
+		return
 	}
 	defer db.Close()
 
 	repository := persistence.NewUserRepository(db)
-	id, error := repository.Create(user)
+	user.ID, error = repository.Create(user)
 	if error != nil {
-		log.Fatal(error)
+		responses.ErrorResponse(w, http.StatusInternalServerError, error)
+		return
 	}
 
-	w.WriteHeader(http.StatusCreated)
-	w.Header().Add("Location", "/users/" + string(id))
-	w.Write([]byte(fmt.Sprintf("Created a new user with id %d", id)))
+	responses.JsonResponse(w, http.StatusCreated, user)
 }
 
-// lists all users
+// ListUsers lists all users
 func ListUsers(w http.ResponseWriter, r *http.Request) {
 
-	w.WriteHeader(http.StatusOK)
+	description := strings.ToLower(r.URL.Query().Get("desc"))
 
-	w.Write([]byte("Listing uses"))
+	db, error := database.Connect()
+	if error != nil {
+		responses.ErrorResponse(w, http.StatusInternalServerError, error)
+		return
+	}
+	defer db.Close()
+
+	repository := persistence.NewUserRepository(db)
+	users, error := repository.ListUsers(description)
+	if error != nil {
+		responses.ErrorResponse(w, http.StatusInternalServerError, error)
+		return
+	}
+
+	responses.JsonResponse(w, http.StatusOK, users)
 }
 
-// find a user by id
+// FindUserById find a user by id
 func FindUserById(w http.ResponseWriter, r *http.Request) {
 
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Finding user by id"))
+	pathParameters := mux.Vars(r)
+	id, error := strconv.ParseUint(pathParameters["id"], 10, 64)
+	if error != nil {
+		responses.ErrorResponse(w, http.StatusBadRequest, error)
+		return
+	}
+
+	db, error := database.Connect()
+	if error != nil {
+		responses.ErrorResponse(w, http.StatusInternalServerError, error)
+		return
+	}
+	defer db.Close()
+
+	repository := persistence.NewUserRepository(db)
+	user, error := repository.GetUserById(id)
+	if error != nil {
+		responses.ErrorResponse(w, http.StatusInternalServerError, error)
+		return
+	}
+
+	if user.ID != 0 {
+		responses.JsonResponse(w, http.StatusOK, user)
+	} else {
+		responses.JsonResponse(w, http.StatusNotFound, nil)
+	}
+
 }
 
-// updates a user
+// UpdateUser updates a user
 func UpdateUser(w http.ResponseWriter, r *http.Request) {
 
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Updating a user"))
+	pathParameters := mux.Vars(r)
+	id, error := strconv.ParseUint(pathParameters["id"], 10, 64)
+	if error != nil {
+		responses.ErrorResponse(w, http.StatusBadRequest, error)
+		return
+	}
+
+	requestBody, error := ioutil.ReadAll(r.Body)
+	if error != nil {
+		responses.ErrorResponse(w, http.StatusUnprocessableEntity, error)
+		return
+	}
+
+	var user models.User
+	if error = json.Unmarshal(requestBody, &user); error != nil {
+		responses.ErrorResponse(w, http.StatusBadRequest, error)
+		return
+	}
+
+	if error = user.PrepareUpdate(); error != nil {
+		responses.ErrorResponse(w, http.StatusBadRequest, error)
+		return
+	}
+
+	db, error := database.Connect()
+	if error != nil {
+		responses.ErrorResponse(w, http.StatusInternalServerError, error)
+		return
+	}
+	defer db.Close()
+
+	repository := persistence.NewUserRepository(db)
+	error = repository.Update(id, user)
+	if error != nil {
+		responses.ErrorResponse(w, http.StatusInternalServerError, error)
+		return
+	}
+
+	responses.JsonResponse(w, http.StatusNoContent, nil)
+
+
 }
 
-// deletes a user
+// DeleteUser deletes a user
 func DeleteUser(w http.ResponseWriter, r *http.Request) {
 
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Deleting a user"))
+	pathParameters := mux.Vars(r)
+	id, error := strconv.ParseUint(pathParameters["id"], 10, 64)
+	if error != nil {
+		responses.ErrorResponse(w, http.StatusBadRequest, error)
+		return
+	}
+
+	db, error := database.Connect()
+	if error != nil {
+		responses.ErrorResponse(w, http.StatusInternalServerError, error)
+		return
+	}
+	defer db.Close()
+
+	repository := persistence.NewUserRepository(db)
+	error = repository.Delete(id)
+	if error != nil {
+		responses.ErrorResponse(w, http.StatusInternalServerError, error)
+		return
+	}
+
+	responses.JsonResponse(w, http.StatusNoContent, nil)
 }
