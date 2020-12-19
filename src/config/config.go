@@ -9,12 +9,14 @@ import (
 )
 
 var (
-	// database connection string pattern
+	// connectionStringPattern database connection string pattern
 	connectionStringPattern = "%s:%s@/%s?charset=utf8&parseTime=True&loc=Local"
-	// database connection string
-	ConnectionString = ""
-	// API port
-	Port = 0
+	// ConnectionString database connection string
+	ConnectionString string
+	// Port API port number
+	Port int
+	// SecretKey key used to sign token
+	SecretKey []byte
 )
 
 // init environment vars
@@ -32,4 +34,6 @@ func Load() {
 
 	ConnectionString = fmt.Sprintf(connectionStringPattern, os.Getenv("DB_USER"),
 		os.Getenv("DB_PASSWORD"), os.Getenv("DB_NAME"))
+
+	SecretKey = []byte(os.Getenv("SECRET_KEY"))
 }

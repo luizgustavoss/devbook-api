@@ -1,7 +1,9 @@
 package models
 
 import (
+	"devbook/src/security"
 	"errors"
+	"github.com/badoux/checkmail"
 	"strings"
 	"time"
 )
@@ -23,6 +25,11 @@ func (user *User) PrepareCreate() error {
 		return error
 	}
 	user.format()
+	passwordHash, error := security.Hash(user.Password)
+	if error != nil {
+		return error
+	}
+	user.Password = string(passwordHash)
 	return nil
 }
 
@@ -66,6 +73,10 @@ func (user *User) validateCommonAttributes() error {
 
 	if user.Email == "" {
 		return errors.New("Invalid user email!")
+	}
+
+	if error := checkmail.ValidateFormat(user.Email); error != nil {
+		return errors.New("Invalid email format!")
 	}
 
 	if user.Nick == "" {
