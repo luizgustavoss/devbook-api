@@ -18,7 +18,7 @@ type User struct {
 	CreatedAt time.Time `json:"createdAt,omitempty"`
 }
 
-// PrepareCreate Prepare validates and formats user data for creation
+// PrepareCreate validates and formats user data for creation
 func (user *User) PrepareCreate() error {
 
 	if error := user.validateCreation(); error != nil {
@@ -33,7 +33,7 @@ func (user *User) PrepareCreate() error {
 	return nil
 }
 
-// PrepareUpdate Prepare validates and formats user data for update
+// PrepareUpdate validates and formats user data for update
 func (user *User) PrepareUpdate() error {
 
 	if error := user.validateUpdate(); error != nil {

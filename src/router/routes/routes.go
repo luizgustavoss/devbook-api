@@ -18,7 +18,8 @@ type Route struct {
 func ConfigureRoutes(r *mux.Router) *mux.Router {
 
 	routes := userRoutes
-	routes =  append(routes, loginRoutes...)
+	routes = append(routes, loginRoutes...)
+	routes = append(routes, publicationRoutes...)
 
 	for _, route := range routes {
 
@@ -26,7 +27,7 @@ func ConfigureRoutes(r *mux.Router) *mux.Router {
 			r.HandleFunc(route.URI,
 				middlewares.CheckAuthenticatedRequest(
 					middlewares.LogRequest(route.Function))).Methods(route.Method)
-		} else{
+		} else {
 			r.HandleFunc(route.URI,
 				middlewares.LogRequest(route.Function)).Methods(route.Method)
 		}
