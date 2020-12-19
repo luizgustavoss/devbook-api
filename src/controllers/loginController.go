@@ -15,7 +15,6 @@ import (
 func Login(w http.ResponseWriter, r *http.Request) {
 
 	requestBody, error := ioutil.ReadAll(r.Body)
-
 	if error != nil {
 		responses.ErrorResponse(w, http.StatusUnprocessableEntity, error)
 		return

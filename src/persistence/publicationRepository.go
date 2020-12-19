@@ -5,7 +5,7 @@ import (
 	"devbook/src/models"
 )
 
-// persists publication data
+// PublicationRepository persists publication data
 type PublicationRepository struct {
 	db *sql.DB
 }
@@ -29,6 +29,7 @@ func (repository PublicationRepository) CreatePublication(publication models.Pub
 	if error != nil {
 		return 0, error
 	}
+
 	return uint64(id), nil;
 }
 
@@ -57,6 +58,7 @@ func (repository PublicationRepository) GetPublicationById(id uint64) (models.Pu
 			return publication, error
 		}
 	}
+
 	return publication, nil
 }
 
@@ -87,6 +89,7 @@ func (repository PublicationRepository) GetPublicationsForUserId(userId uint64) 
 		}
 		publications = append(publications, publication)
 	}
+
 	return publications, nil
 }
 
@@ -103,6 +106,7 @@ func (repository PublicationRepository) UpdatePublication(id uint64, publication
 	if _, error = stmt.Exec(publication.Title, publication.Content, id); error != nil  {
 		return error
 	}
+
 	return nil
 }
 
@@ -119,6 +123,7 @@ func (repository PublicationRepository) DeletePublication(id uint64) error {
 	if _, error = stmt.Exec(id); error != nil {
 		return error
 	}
+
 	return nil
 }
 
@@ -149,6 +154,7 @@ func (repository PublicationRepository) GetUserPublicationById(userId uint64) ([
 		}
 		publications = append(publications, publication)
 	}
+
 	return publications, nil
 }
 
@@ -164,6 +170,7 @@ func (repository PublicationRepository) RegisterPublicationLike(id uint64) error
 	if _, error = stmt.Exec(id); error != nil  {
 		return error
 	}
+
 	return nil
 }
 
@@ -179,13 +186,12 @@ func (repository PublicationRepository) RegisterPublicationUnlike(id uint64) err
 	if _, error = stmt.Exec(id); error != nil  {
 		return error
 	}
+
 	return nil
 }
 
 
-
-
-// factory
+// NewPublicationRepository factory
 func NewPublicationRepository(db *sql.DB) *PublicationRepository {
 	return &PublicationRepository{db}
 }

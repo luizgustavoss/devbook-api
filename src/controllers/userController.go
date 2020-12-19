@@ -19,7 +19,6 @@ import (
 func CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	requestBody, error := ioutil.ReadAll(r.Body)
-
 	if error != nil {
 		responses.ErrorResponse(w, http.StatusUnprocessableEntity, error)
 		return
@@ -49,6 +48,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		responses.ErrorResponse(w, http.StatusInternalServerError, error)
 		return
 	}
+
 	responses.JsonResponse(w, http.StatusCreated, user)
 }
 
@@ -70,6 +70,7 @@ func ListUsers(w http.ResponseWriter, r *http.Request) {
 		responses.ErrorResponse(w, http.StatusInternalServerError, error)
 		return
 	}
+
 	responses.JsonResponse(w, http.StatusOK, users)
 }
 
@@ -157,6 +158,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 		responses.ErrorResponse(w, http.StatusInternalServerError, error)
 		return
 	}
+
 	responses.JsonResponse(w, http.StatusNoContent, nil)
 }
 
@@ -195,6 +197,7 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 		responses.ErrorResponse(w, http.StatusInternalServerError, error)
 		return
 	}
+
 	responses.JsonResponse(w, http.StatusNoContent, nil)
 }
 
@@ -234,6 +237,7 @@ func FollowUser(w http.ResponseWriter, r *http.Request) {
 		responses.ErrorResponse(w, http.StatusInternalServerError, error)
 		return
 	}
+
 	responses.JsonResponse(w, http.StatusOK, nil)
 }
 
@@ -273,6 +277,7 @@ func UnfollowUser(w http.ResponseWriter, r *http.Request) {
 		responses.ErrorResponse(w, http.StatusInternalServerError, error)
 		return
 	}
+
 	responses.JsonResponse(w, http.StatusOK, nil)
 }
 
@@ -299,6 +304,7 @@ func GetUserFollowers(w http.ResponseWriter, r *http.Request) {
 		responses.ErrorResponse(w, http.StatusInternalServerError, error)
 		return
 	}
+
 	responses.JsonResponse(w, http.StatusOK, users)
 }
 
@@ -325,6 +331,7 @@ func GetFollowedUsers(w http.ResponseWriter, r *http.Request) {
 		responses.ErrorResponse(w, http.StatusInternalServerError, error)
 		return
 	}
+
 	responses.JsonResponse(w, http.StatusOK, users)
 }
 
@@ -396,5 +403,7 @@ func UpdatePassword(w http.ResponseWriter, r *http.Request) {
 		responses.ErrorResponse(w, http.StatusBadRequest, error)
 		return
 	}
+
+
 	responses.JsonResponse(w, http.StatusOK, nil)
 }

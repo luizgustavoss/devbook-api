@@ -6,7 +6,7 @@ import (
 	"fmt"
 )
 
-// persists user data
+// UserRepository persists user data
 type UserRepository struct {
 	db *sql.DB
 }
@@ -203,6 +203,7 @@ func (repository UserRepository) UnfollowUser(followedId uint64, followerId uint
 	if error != nil {
 		return error
 	}
+
 	return nil
 }
 
@@ -228,6 +229,7 @@ func (repository UserRepository) GetFollowersForUserId(followedId uint64) ([]mod
 		}
 		users = append(users, user)
 	}
+
 	return users, nil
 }
 
@@ -253,6 +255,7 @@ func (repository UserRepository) GetFollowedUsersForUserId(followerId uint64) ([
 		}
 		users = append(users, user)
 	}
+
 	return users, nil
 }
 
@@ -273,8 +276,7 @@ func (repository UserRepository) UpdateUserPassword(userId uint64, password stri
 	return nil
 }
 
-
-// factory
+// NewUserRepository factory
 func NewUserRepository(db *sql.DB) *UserRepository {
 	return &UserRepository{db}
 }

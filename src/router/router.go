@@ -5,7 +5,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// return a router with configured routes
+// GetRouter return a router with configured routes
 func GetRouter() *mux.Router {
 	router := mux.NewRouter()
 	return routes.ConfigureRoutes(router)

@@ -57,6 +57,7 @@ func CreatePublication(w http.ResponseWriter, r *http.Request) {
 		responses.ErrorResponse(w, http.StatusInternalServerError, error)
 		return
 	}
+
 	responses.JsonResponse(w, http.StatusCreated, publication)
 }
 
@@ -97,7 +98,6 @@ func UpdatePublication(w http.ResponseWriter, r *http.Request) {
 	}
 
 	requestBody, error := ioutil.ReadAll(r.Body)
-
 	if error != nil {
 		responses.ErrorResponse(w, http.StatusUnprocessableEntity, error)
 		return
@@ -121,6 +121,7 @@ func UpdatePublication(w http.ResponseWriter, r *http.Request) {
 		responses.ErrorResponse(w, http.StatusInternalServerError, error)
 		return
 	}
+
 	responses.JsonResponse(w, http.StatusNoContent, nil)
 }
 
@@ -165,6 +166,7 @@ func DeletePublication(w http.ResponseWriter, r *http.Request) {
 		responses.ErrorResponse(w, http.StatusInternalServerError, error)
 		return
 	}
+
 	responses.JsonResponse(w, http.StatusNoContent, nil)
 }
 
@@ -221,6 +223,7 @@ func GetPublications(w http.ResponseWriter, r *http.Request) {
 		responses.ErrorResponse(w, http.StatusInternalServerError, error)
 		return
 	}
+
 	responses.JsonResponse(w, http.StatusOK, publications)
 }
 
@@ -247,6 +250,7 @@ func GetUserPublications(w http.ResponseWriter, r *http.Request) {
 		responses.ErrorResponse(w, http.StatusInternalServerError, error)
 		return
 	}
+
 	responses.JsonResponse(w, http.StatusOK, publications)
 }
 
@@ -273,6 +277,7 @@ func LikePublication(w http.ResponseWriter, r *http.Request) {
 		responses.ErrorResponse(w, http.StatusInternalServerError, error)
 		return
 	}
+
 	responses.JsonResponse(w, http.StatusOK, nil)
 }
 
@@ -299,5 +304,6 @@ func UnlikePublication(w http.ResponseWriter, r *http.Request) {
 		responses.ErrorResponse(w, http.StatusInternalServerError, error)
 		return
 	}
+
 	responses.JsonResponse(w, http.StatusOK, nil)
 }

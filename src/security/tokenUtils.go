@@ -15,5 +15,6 @@ func GenerateBase64RandomToken() (string, error) {
 	}
 
 	base64Token := base64.StdEncoding.EncodeToString(key)
+
 	return base64Token, nil
 }

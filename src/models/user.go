@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-// represents a user of system
+// User represents a user of system
 type User struct {
 	ID        uint64    `json:"id,omitempty"`
 	Name      string    `json:"name,omitempty"`

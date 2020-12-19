@@ -6,12 +6,13 @@ import (
 	"strings"
 )
 
-// represents a user of system
+// Credential represents a user of system
 type Credential struct {
 	Email     string    `json:"email,omitempty"`
 	Password  string    `json:"password,omitempty"`
 }
 
+// ValidateAndNormalizeCredential validates and normalize credentials data
 func (c Credential) ValidateAndNormalizeCredential() error {
 
 	if c.Password == "" {

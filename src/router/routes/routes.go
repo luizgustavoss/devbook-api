@@ -32,5 +32,6 @@ func ConfigureRoutes(r *mux.Router) *mux.Router {
 				middlewares.LogRequest(route.Function)).Methods(route.Method)
 		}
 	}
+
 	return r
 }

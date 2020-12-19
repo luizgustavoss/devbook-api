@@ -19,7 +19,7 @@ var (
 	SecretKey []byte
 )
 
-// init environment vars
+// Load inits environment variables
 func Load() {
 	var error error
 

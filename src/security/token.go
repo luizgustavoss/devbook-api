@@ -36,6 +36,7 @@ func ValidateToken(r *http.Request) error {
 	return errors.New("Invalid Token")
 }
 
+// ExtractUserId extracts user id from jwt token
 func ExtractUserId(r *http.Request) (uint64, error) {
 	stringToken := extractToken(r)
 	token, error := jwt.Parse(stringToken, getVerificationKey)
